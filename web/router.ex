@@ -24,21 +24,28 @@ defmodule Meetings.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    pipe_through :browser
+    coherence_routes()
+  end
+
+  scope "/" do
+    pipe_through :protected
+    coherence_routes :protected
+  end
+
   scope "/", Meetings do
     pipe_through :browser # Use the default browser stack
 
-    coherence_routes
-
     get "/", PageController, :index
     get "/meetings", MeetingController, :index
+    get "/meetings/types", MeetingController, :types
     get "/meetings/:id", MeetingController, :show
-    get "/meetings/ical/:id", MeetingController, :ical
+    get "/meetings/:type_id/date/:date_id", MeetingController, :show_date
   end
 
   scope "/", Meetings do
     pipe_through :protected
-
-    coherence_routes :protected
 
     resources "/meeting_types", MeetingTypeController
     resources "/meeting_dates", MeetingDateController

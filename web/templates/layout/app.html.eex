@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="A list of Wichita Public Meetings">
+    <meta name="author" content="Open Wichita">
 
-    <title>Hello Meetings!</title>
+    <title>Wichita Public Meetings</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <link href="http://addtocalendar.com/atc/1.5/atc-style-blue.css" rel="stylesheet" type="text/css">
   </head>
 
   <body>
@@ -17,16 +18,16 @@
         <nav role="navigation">
           <ul class="nav nav-pills pull-right">
             <li><a href="/">Home</a></li>
-            <li><a href="/meetings">Event List</a></li>
+            <li><a href="/meetings">Meetings</a></li>
             <%= if @current_user == nil do %>
               <li><%= link "Login", to: session_path(@conn, :new) %></li>
-              <li><%= link "Regiser", to: registration_path(@conn, :new) %></li>
+              <li><%= link "Register", to: registration_path(@conn, :new) %></li>
             <%= else %>
               <li><%= link "Logout", to: session_path(@conn, :delete), method: :delete %></li>
             <% end %>
           </ul>
         </nav>
-        <h3 class="brand">Wichita Public Meetings</h3>
+        <h3 class="brand"><a id="mainLogo" href="/">Wichita Public Meetings</a></h3>
       </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
@@ -38,5 +39,19 @@
 
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script type="text/javascript">(function () {
+         if (window.addtocalendar)if(typeof window.addtocalendar.start == "function")return;
+         if (window.ifaddtocalendar == undefined) { window.ifaddtocalendar = 1;
+             var d = document, s = d.createElement('script'), g = 'getElementsByTagName';
+             s.type = 'text/javascript';s.charset = 'UTF-8';s.async = true;
+             s.src = ('https:' == window.location.protocol ? 'https' : 'http')+'://addtocalendar.com/atc/1.5/atc.min.js';
+             var h = d[g]('body')[0];h.appendChild(s); }})();
+    </script>
   </body>
+
+  <footer>
+    <p>
+      Supported by <a href="http://openwichita.com/" target="_blank" rel="noreferrer noopener">Open Wichita</a>.
+    </p>
+  </footer>
 </html>

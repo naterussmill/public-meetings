@@ -1,23 +1,39 @@
+<h3>Note: adding <a href="/meetings/types">meeting filter</a> to url based on type.</h3>
 <table class="table table-hover">
   <thead>
     <tr>
-      <th colspan="2"><h2>2017 Meetings: <%= length(@meetings) %></h2></th>
+      <th colspan="2"><h2>2017 Meetings: <%= length(@meetings) %> <%= @title %>
+      <%= if length(@meetings) == 1 do %>
+        Meeting
+      <% else %>
+        Meetings
+      <% end %>
+      <a class="btn btn-default btn-xs pull-right" href="/meetings/?<%= URI.encode_query(Map.put(@conn.params, "format", "ics")) %>">Add All</a>
+      </h2></th>
     </tr>
   </thead>
   <tbody>
-    <%= for meeting <- @meetings do %>
-      <tr>
+    <%= for {meeting, meeting_ics} <- @meetings do %>
+      <tr class="meeting">
         <td>
-          <h3><a href="/meetings/<%= meeting.id %>"><%= meeting.title %></a></h3>
+          <h3><a href="/meetings/<%= meeting.type_id %>"><%= meeting.title %></a></h3>
           <p>
-            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> <%= DateTime.to_date(meeting.date) %> &nbsp; <span class="glyphicon glyphicon-time" aria-hidden="true"></span> <%= DateTime.to_time(meeting.date) %> &nbsp; <span class="glyphicon glyphicon-time" aria-hidden="true"></span> <%= meeting.duration %> mins.
+            <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> <%= DateTime.to_date(meeting.date) %> &nbsp; <span class="glyphicon glyphicon-time" aria-hidden="true"></span> <%= DateTime.to_time(meeting.date) %> &nbsp; <span class="glyphicon glyphicon-time" aria-hidden="true"></span> <%= meeting.duration %>
           </p>
           <p>
-            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <a href="http://maps.google.com?q=<%= meeting.location %>" target="_blank"><%= meeting.location %></a>
+            <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> <a href="http://maps.google.com?q=<%= meeting.location %>" target="_blank" rel="noreferrer noopener"><%= meeting.location %></a>
           </p>
         </td>
         <td>
-          <a class="btn btn-default btn-xs" href="/meetings/ical/<%= meeting.id %>">Add</a>
+          <span class="addtocalendar atc-style-blue">
+              <var class="atc_event">
+                  <var class="atc_date_start"><%= Timex.format!(meeting_ics.dtstart, "{ISOdate} {ISOtime}") %></var>
+                  <var class="atc_date_end"><%= Timex.format!(meeting_ics.dtend, "{ISOdate} {ISOtime}") %></var>
+                  <var class="atc_timezone">America/Chicago</var>
+                  <var class="atc_title"><%= meeting_ics.summary %></var>
+                  <var class="atc_location"><%= meeting_ics.location %></var>
+              </var>
+          </span>
         </td>
       </tr>
     <% end %>
